@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 
 let addTrackOptions = ref(["By URL", "Via file upload"]);
-let uploadFile = ref(true);
+let uploadFile = ref(false);
 
 function onChange(event) {
 	let option = event.target.value;
