@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from 'vue';
 
-import {usePlaylist}  from '../composables/usePlaylist';
-const { addSong } = usePlaylist();
+import { usePlaylist } from '../composables/usePlaylist';
+const { playlist, addSong } = usePlaylist();
 
 
 let addTrackOptions = ref(["By URL", "Via file upload"]);
@@ -12,12 +12,14 @@ let songURL = ref("");
 function onChange(event) {
 	let option = event.target.value;
 	uploadFile.value = (option == addTrackOptions.value[1]);
-	console.log(songURL);
+	console.log(songURL.value);
 }
 
-function clickURL(event) {
+function clickURL() {
 	addSong(songURL.value, songURL.value);
 	console.log("URL : " + songURL.value);
+    console.log(playlist);
+    songURL.value = "";
 }
 
 function clickUpload(event) {
