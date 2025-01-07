@@ -7,9 +7,20 @@ import Playlist from './components/Playlist.vue';
 </script>
 
 <template>
-    <Player />
-    <Playlist />
-    <AddTrack />
+    <div id="global-container">
+        <h1>Jukebox</h1>
+        <Player />
+        <Playlist />
+        <AddTrack />
+    </div>
 </template>
 
-<style></style>
+<style scoped>
+    div#global-container {
+        margin: 15%;
+    }
+
+    div#global-container > * {
+        margin: 50px;
+    }
+</style>
