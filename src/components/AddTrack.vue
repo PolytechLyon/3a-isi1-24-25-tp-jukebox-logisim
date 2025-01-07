@@ -12,9 +12,7 @@ let blobURL = ref("");
 let songName = ref("");
 
 function onChange(event) {
-	let option = event.target.value;
-	uploadFile.value = (option == addTrackOptions.value[1]);
-	console.log(songURL);
+	uploadFile.value = (event.target.value == addTrackOptions.value[1]);
 }
 
 function clickURL(event) {
