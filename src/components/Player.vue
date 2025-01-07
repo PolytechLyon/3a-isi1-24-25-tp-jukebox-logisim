@@ -10,7 +10,7 @@ const textButtonPlayPause = ref('Play');
 
 watchEffect(() => {
     currentSong.value = getCurrentSong();
-    textButtonPlayPause.value = 'Play';
+    textButtonPlayPause.value = 'play';
     console.log('Current song:', currentSong.value);
 });
 
@@ -18,10 +18,10 @@ const togglePlayPause = () => {
     const audio = audioRef.value;
     if (audio.paused) {
         audio.play();
-        textButtonPlayPause.value = 'Pause';
+        textButtonPlayPause.value = 'pause';
     } else {
         audio.pause();
-        textButtonPlayPause.value = 'Play';
+        textButtonPlayPause.value = 'play';
     }
 };
 
@@ -30,6 +30,9 @@ const updateProgressBar = () => {
     const progress = progressRef.value;
     if (audio && progress) {
         progress.value = (audio.currentTime / audio.duration) * 100 || 0;
+        if (audio.ended) {
+            textButtonPlayPause.value = 'play';
+        }
     }
 };
 
@@ -49,22 +52,61 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div>
-        <h2>Player</h2>
-        <div>
-            <div v-if="currentSong">
-                Now playing: {{ currentSong.name }}
-                <button @click="togglePlayPause" id="playPauseButton">{{ textButtonPlayPause }}</button>
+    <div id="player">
+        <!-- <h2>Player</h2> -->
+            <div v-if="currentSong" id="player-bar">
+                <div id="song">
+                    <img src="/cover.webp" />
+                    <span id="songName">{{ currentSong.name }}</span>
+                </div>
                 <progress id="progress" ref="progressRef" value="0" max="100"></progress>
+                <div @click="togglePlayPause" id="playPauseButton"><img :src="`/${textButtonPlayPause}.svg`" /></div>
             </div>
-            <div v-else>
+            <div v-else id="player-else">
                 Choose a track to play.
             </div>
             <audio :src="currentSong ? currentSong.url : ''" ref="audioRef"></audio>
-        </div>
     </div>
 </template>
 
 <style scoped>
+    #player {
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background-color: #333;
+        margin: 0 !important;
+        color: white;
+        height: 70px;
+    }
+    #player-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        height: 100%;
+    }
+    #song {
+        display: flex;
+        align-items: center;
 
+        &>#songName {
+            margin-left: 10px;
+            font-size: 1.2em;
+        }
+    }
+    progress {
+        width: 50%;
+    }
+    #player-else {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+    }
+    img {
+        width: 50px;
+        height: 50px;
+    }
 </style>

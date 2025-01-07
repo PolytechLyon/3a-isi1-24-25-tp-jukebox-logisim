@@ -15,7 +15,7 @@ function onChange(event) {
 	uploadFile.value = (event.target.value == addTrackOptions.value[1]);
 }
 
-function clickURL(event) {
+function clickURL() {
 	let songNameShort = songURL.value;
 	songNameShort = songNameShort.substring(songNameShort.lastIndexOf("\\") + 1);
 	addSong(songNameShort, songURL.value);
@@ -28,7 +28,7 @@ function uploadSelected(event) {
 	songName.value = songName.value.substring(songName.value.lastIndexOf("\\") + 1);
 }
 
-function clickUpload(event) {
+function clickUpload() {
 	addSong(songName.value, blobURL.value);
 	songName.value = "";
 	blobURL.value = "";
@@ -43,16 +43,27 @@ function clickUpload(event) {
 		<select id="method-selector" @change="onChange">
 			<option v-for="option in addTrackOptions">{{ option }}</option>
 		</select>
-		<div v-if="uploadFile">
-			<input type="file" @change="uploadSelected"/>
+		<span v-if="uploadFile">
+            <label for="file-upload">Upload file</label>
+			<input type="file" @change="uploadSelected" id="file-upload"/>
 			<button :disabled="!blobURL" @click="clickUpload">Add uploaded file</button>
-		</div>
-		<div v-else>
+		</span>
+		<span v-else>
 			<input v-model="songURL" type="text" placeholder="Provide URL" />
 			<button :disabled="!songURL" @click="clickURL">Add URL</button>
-		</div>
+		</span>
 	</div>
 </template>
 
 <style scoped>
+    #file-upload {
+        display: none;
+    }
+    label[for="file-upload"] {
+        padding: 5px;
+        background-color: #333;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 </style>
