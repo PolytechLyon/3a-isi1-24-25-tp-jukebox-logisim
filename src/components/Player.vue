@@ -1,41 +1,70 @@
 <script setup>
-import { watchEffect, useTemplateRef } from 'vue';
+import { ref, watchEffect, onMounted, onBeforeUnmount } from 'vue';
 import { usePlaylist } from '../composables/usePlaylist';
 const { getCurrentSong } = usePlaylist();
 
+const audioRef = ref(null);
+const progressRef = ref(null);
+const currentSong = ref(null);
+const textButtonPlayPause = ref('Play');
+
 watchEffect(() => {
-    console.log('Current song:', getCurrentSong());
+    currentSong.value = getCurrentSong();
+    textButtonPlayPause.value = 'Play';
+    console.log('Current song:', currentSong.value);
 });
 
 const togglePlayPause = () => {
-    const track = document.getElementById('track');
-    if (track.paused) {
-        track.play();
-        document.getElementById('playPauseButton').innerText = 'Pause';
+    const audio = audioRef.value;
+    if (audio.paused) {
+        audio.play();
+        textButtonPlayPause.value = 'Pause';
     } else {
-        track.pause();
-        document.getElementById('playPauseButton').innerText = 'Play';
+        audio.pause();
+        textButtonPlayPause.value = 'Play';
     }
 };
+
+const updateProgressBar = () => {
+    const audio = audioRef.value;
+    const progress = progressRef.value;
+    if (audio && progress) {
+        progress.value = (audio.currentTime / audio.duration) * 100 || 0;
+    }
+};
+
+onMounted(() => {
+    const audio = audioRef.value;
+    if (audio) {
+        audio.addEventListener('timeupdate', updateProgressBar);
+    }
+});
+
+onBeforeUnmount(() => {
+    const audio = audioRef.value;
+    if (audio) {
+        audio.removeEventListener('timeupdate', updateProgressBar);
+    }
+});
 </script>
 
 <template>
     <div>
         <h2>Player</h2>
         <div>
-            <div v-if="getCurrentSong()">
-                Now playing: {{ getCurrentSong() ? getCurrentSong().name : '' }}
-                <a href="#" @click="togglePlayPause" id="playPauseButton">Play</a>
-                <audio :src="getCurrentSong() ? getCurrentSong().url : ''" id="track"></audio>
+            <div v-if="currentSong">
+                Now playing: {{ currentSong.name }}
+                <button @click="togglePlayPause" id="playPauseButton">{{ textButtonPlayPause }}</button>
+                <progress id="progress" ref="progressRef" value="0" max="100"></progress>
             </div>
             <div v-else>
                 Choose a track to play.
             </div>
-            <div id="track-options">
-
-            </div>
+            <audio :src="currentSong ? currentSong.url : ''" ref="audioRef"></audio>
         </div>
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+
+</style>
