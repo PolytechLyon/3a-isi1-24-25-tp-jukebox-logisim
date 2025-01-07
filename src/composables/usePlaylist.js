@@ -28,6 +28,10 @@ function deleteSong(songId) {
     playlist.value.splice(playlist.value.findIndex(song => song.id === songId), 1);
 }
 
+function getCurrentSong() {
+    return currentSong.value;
+}
+
 export function usePlaylist() {    
     return {
         playlist,
@@ -35,5 +39,6 @@ export function usePlaylist() {
         pushSongToPlayer,
         addSong,
         deleteSong,
+        getCurrentSong
     };
 }

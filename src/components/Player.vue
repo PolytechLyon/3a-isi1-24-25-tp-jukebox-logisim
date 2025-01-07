@@ -1,18 +1,21 @@
 <script setup>
-import { ref } from 'vue';
-let playingTrack = ref(null);
-const playTrack = (trackId) => {
-    console.log('Playing track with id:', trackId);
-}
+import { watchEffect } from 'vue';
+import { usePlaylist } from '../composables/usePlaylist';
+const { currentSong, getCurrentSong } = usePlaylist();
+
+watchEffect(() => {
+    console.log('Current song:', getCurrentSong());
+});
 </script>
 
 <template>
     <div>
         <h2>Player</h2>
         <div>
-            <div @play-track="(track) => playTrack(track.id)" v-if="playingTrack && playingTrack.value">
-                Now playing: {{ playingTrack.value ? playingTrack.value.title : '' }}
-                <a>Pause</a>
+            <div v-if="getCurrentSong()">
+                Now playing: {{ getCurrentSong() ? getCurrentSong().name : '' }}
+                <a href="#">Pause</a>
+                <audio :src="getCurrentSong() ? getCurrentSong().url : ''" controls></audio>
             </div>
             <div v-else>
                 Choose a track to play.
