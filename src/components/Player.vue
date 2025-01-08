@@ -1,17 +1,24 @@
 <script setup>
 import { ref, watchEffect, onMounted, onBeforeUnmount } from 'vue';
 import { usePlaylist } from '../composables/usePlaylist';
-const { getCurrentSong } = usePlaylist();
+const { getNextSong, getCurrentSong } = usePlaylist();
 
 const audioRef = ref(null);
 const progressRef = ref(null);
 const currentSong = ref(null);
-const textButtonPlayPause = ref('Play');
+const textButtonPlayPause = ref('play');
+const choiceRef = ref(0);
+const playModes = ['repeat', 'repeat-one', "no-repeat"];
 
 watchEffect(() => {
     currentSong.value = getCurrentSong();
-    textButtonPlayPause.value = 'play';
-    console.log('Current song:', currentSong.value);
+    if(audioRef.value){
+        textButtonPlayPause.value = 'pause';
+        setTimeout(() => {
+            audioRef.value.play();
+        }, 10);
+        console.log('Current song:', currentSong.value);
+    }
 });
 
 const togglePlayPause = () => {
@@ -25,13 +32,29 @@ const togglePlayPause = () => {
     }
 };
 
+const changeMode = () => {
+    choiceRef.value = (choiceRef.value + 1) % playModes.length;
+};
+
 const updateProgressBar = () => {
     const audio = audioRef.value;
     const progress = progressRef.value;
     if (audio && progress) {
         progress.value = (audio.currentTime / audio.duration) * 100 || 0;
         if (audio.ended) {
-            textButtonPlayPause.value = 'play';
+            switch (playModes[choiceRef.value]) {
+                case 'repeat':
+                    currentSong.value = getNextSong();
+                    audio.play();
+                    break;
+                case 'repeat-one':
+                    audio.currentTime = 0;
+                    audio.play();
+                    break;
+                case 'no-repeat':
+                    textButtonPlayPause.value = 'play';
+                    break;
+            }
         }
     }
 };
@@ -54,18 +77,21 @@ onBeforeUnmount(() => {
 <template>
     <div id="player">
         <!-- <h2>Player</h2> -->
-            <div v-if="currentSong" id="player-bar">
-                <div id="song">
-                    <img src="/cover.webp" />
-                    <span id="songName">{{ currentSong.name }}</span>
-                </div>
-                <progress id="progress" ref="progressRef" value="0" max="100"></progress>
+        <div v-if="currentSong" id="player-bar">
+            <div id="song">
+                <img src="/cover.webp" />
+                <span id="songName">{{ currentSong.name }}</span>
+            </div>
+            <progress id="progress" ref="progressRef" value="0" max="100"></progress>
+            <div id="navButtons">
                 <div @click="togglePlayPause" id="playPauseButton"><img :src="`/${textButtonPlayPause}.svg`" /></div>
+                <div @click="changeMode" id="playMode"><img :src="`/${playModes[choiceRef]}.svg`" /></div>
             </div>
-            <div v-else id="player-else">
-                Choose a track to play.
-            </div>
-            <audio :src="currentSong ? currentSong.url : ''" ref="audioRef"></audio>
+        </div>
+        <div v-else id="player-else">
+            Choose a track to play.
+        </div>
+        <audio :src="currentSong ? currentSong.url : ''" ref="audioRef"></audio>
     </div>
 </template>
 
@@ -108,5 +134,11 @@ onBeforeUnmount(() => {
     img {
         width: 50px;
         height: 50px;
+    }
+    #navButtons {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20%;
     }
 </style>
