@@ -34,7 +34,8 @@ function getCurrentSong() {
 
 function getNextSong() {
     const currentSongIndex = playlist.value.findIndex(song => song.id === currentSong.value.id);
-    return playlist.value[(currentSongIndex + 1) % playlist.value.length];
+    console.log('Next song : ' + playlist.value[(currentSongIndex + 1) % playlist.value.length].name);
+    currentSong.value = playlist.value[(currentSongIndex + 1) % playlist.value.length];
 }
 
 export function usePlaylist() {    

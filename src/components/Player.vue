@@ -17,7 +17,7 @@ watchEffect(() => {
         setTimeout(() => {
             audioRef.value.play();
         }, 10);
-        console.log('Current song:', currentSong.value);
+        console.log('Current song:', currentSong.value?.name);
     }
 });
 
@@ -44,7 +44,7 @@ const updateProgressBar = () => {
         if (audio.ended) {
             switch (playModes[choiceRef.value]) {
                 case 'repeat':
-                    currentSong.value = getNextSong();
+                    getNextSong();
                     audio.play();
                     break;
                 case 'repeat-one':
