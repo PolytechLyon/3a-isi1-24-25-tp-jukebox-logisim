@@ -36,6 +36,17 @@ const changeMode = () => {
     choiceRef.value = (choiceRef.value + 1) % playModes.length;
 };
 
+const putAudioAtCursorPosition = (event) => {
+    const audio = audioRef.value;
+    const progress = progressRef.value;
+    if (audio && progress) {
+        const { left, width } = progress.getBoundingClientRect();
+        const clickX = event.clientX - left;
+        const percentage = clickX / width;
+        audio.currentTime = audio.duration * percentage;
+    }
+};
+
 const updateProgressBar = () => {
     const audio = audioRef.value;
     const progress = progressRef.value;
@@ -82,7 +93,7 @@ onBeforeUnmount(() => {
                 <img src="/cover.webp" />
                 <span id="songName">{{ currentSong.name }}</span>
             </div>
-            <progress id="progress" ref="progressRef" value="0" max="100"></progress>
+            <progress @click="putAudioAtCursorPosition" id="progress" ref="progressRef" value="0" max="100"></progress>
             <div id="navButtons">
                 <div @click="togglePlayPause" id="playPauseButton"><img :src="`/${textButtonPlayPause}.svg`" /></div>
                 <div @click="changeMode" id="playMode"><img :src="`/${playModes[choiceRef]}.svg`" /></div>
