@@ -10,15 +10,15 @@ const { playlist, pushSongToPlayer, deleteSong, currentSong } = usePlaylist();
             <tr v-for="track in playlist" :key="track.id" class="track-container">
                 <td>
                     <span :class="{
-                        unplayable: !track.url,
+                        unplayable: !track.playable,
                         'current-track': track.id === currentSong?.id
                     }">
                         {{ track.name }}
                     </span>
                 </td>
                 <td>
-                    <span class="playlist-btn" @click="pushSongToPlayer(track.id)">
-                        <span href="#">Play</span>
+                    <span class="playlist-btn" @click="pushSongToPlayer(track.id)" v-if="track.playable">
+                        <span href="#" >Play</span>
                         <img src="/playlist-play.svg" />
                     </span>
                     <span class="playlist-btn" @click="deleteSong(track.id)">
