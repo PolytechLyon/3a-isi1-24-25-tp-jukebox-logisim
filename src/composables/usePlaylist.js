@@ -1,51 +1,70 @@
-import { ref } from 'vue';
+import { ref } from "vue";
 
-const playlist = ref(
-    [
-        { id: 1, name: "Sample 1", url: "http://codeskulptor-demos.commondatastorage.googleapis.com/pang/paza-moduless.mp3"},
-        { id: 2, name: "Sample 2", url: "http://codeskulptor-demos.commondatastorage.googleapis.com/pang/arrow.mp3"},
-    ]
-);
+const playlist = ref([
+	{
+		id: 1,
+		name: "Sample 1",
+		url: "http://codeskulptor-demos.commondatastorage.googleapis.com/pang/paza-moduless.mp3",
+		playable: true,
+	},
+	{
+		id: 2,
+		name: "Sample 2",
+		url: "http://codeskulptor-demos.commondatastorage.googleapis.com/pang/arrow.mp3",
+		playable: true,
+	},
+]);
 const currentSong = ref(null);
 const id = ref(3);
 
 function pushSongToPlayer(id) {
-    const filteredPlaylist = playlist.value.filter(song => song.id === id);
-    if (filteredPlaylist.length > 0) {
-        currentSong.value = filteredPlaylist[0];
-        console.log('Playing: ' + currentSong.value.name);
-    } else {
-        console.error('Index out of bounds');
-    }
+	const filteredPlaylist = playlist.value.filter((song) => song.id === id);
+	if (filteredPlaylist.length > 0) {
+		currentSong.value = filteredPlaylist[0];
+		console.log("Playing: " + currentSong.value.name);
+	} else {
+		console.error("Index out of bounds");
+	}
 }
 
 function addSong(songName, songUrl) {
-    playlist.value.push({ id: id.value, name: songName, url: songUrl });
-    id.value++;
+	const song = { id: id.value, name: songName, url: songUrl, playable: true };
+	playlist.value.push(song);
+	id.value++;
 }
 
 function deleteSong(songId) {
-    playlist.value.splice(playlist.value.findIndex(song => song.id === songId), 1);
+	const index = playlist.value.findIndex((song) => song.id === songId);
+	if (index === currentSong.value.id) {
+		currentSong.value = null;
+	}
+	playlist.value.splice(index, 1);
 }
 
 function getCurrentSong() {
-    return currentSong.value;
+	return currentSong.value;
 }
 
 function getNextSong() {
-    const currentSongIndex = playlist.value.findIndex(song => song.id === currentSong.value.id);
-    console.log('Next song : ' + playlist.value[(currentSongIndex + 1) % playlist.value.length].name);
-    currentSong.value = playlist.value[(currentSongIndex + 1) % playlist.value.length];
+	const currentSongIndex = playlist.value.findIndex(
+		(song) => song.id === currentSong.value.id
+	);
+	console.log(
+		"Next song : " +
+			playlist.value[(currentSongIndex + 1) % playlist.value.length].name
+	);
+	currentSong.value =
+		playlist.value[(currentSongIndex + 1) % playlist.value.length];
 }
 
-export function usePlaylist() {    
-    return {
-        playlist,
-        currentSong,
-        pushSongToPlayer,
-        addSong,
-        deleteSong,
-        getCurrentSong,
-        getNextSong,
-    };
+export function usePlaylist() {
+	return {
+		playlist,
+		currentSong,
+		pushSongToPlayer,
+		addSong,
+		deleteSong,
+		getCurrentSong,
+		getNextSong,
+	};
 }

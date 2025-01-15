@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watchEffect, onMounted, onBeforeUnmount } from 'vue';
 import { usePlaylist } from '../composables/usePlaylist';
-const { getNextSong, getCurrentSong } = usePlaylist();
+const { getNextSong, getCurrentSong, playlist } = usePlaylist();
 
 const audioRef = ref(null);
 const progressRef = ref(null);
@@ -12,10 +12,17 @@ const playModes = ['repeat', 'repeat-one', "no-repeat"];
 
 watchEffect(() => {
     currentSong.value = getCurrentSong();
-    if(audioRef.value){
+    if (audioRef && audioRef.value) {
         textButtonPlayPause.value = 'pause';
         setTimeout(() => {
-            audioRef.value.play();
+            if (currentSong.value.playable) {
+                audioRef.value.play().catch(error => {
+                    playlist.value[playlist.value.findIndex(song => song.id === currentSong.value.id)].playable = false;
+                    getNextSong();
+                });
+            } else {
+                getNextSong();
+            }
         }, 10);
         console.log('Current song:', currentSong.value?.name);
     }
@@ -107,49 +114,55 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-    #player {
-        width: 100%;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        background-color: #333;
-        margin: 0 !important;
-        color: white;
-        height: 70px;
-    }
-    #player-bar {
-        display: flex;
-        align-items: center;
-        justify-content: space-evenly;
-        height: 100%;
-    }
-    #song {
-        display: flex;
-        align-items: center;
+#player {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background-color: #333;
+    margin: 0 !important;
+    color: white;
+    height: 70px;
+}
 
-        &>#songName {
-            margin-left: 10px;
-            font-size: 1.2em;
-        }
+#player-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 100%;
+}
+
+#song {
+    display: flex;
+    align-items: center;
+
+    &>#songName {
+        margin-left: 10px;
+        font-size: 1.2em;
     }
-    progress {
-        width: 50%;
-    }
-    #player-else {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-    }
-    img {
-        width: 50px;
-        height: 50px;
-    }
-    #navButtons {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 20%;
-    }
+}
+
+progress {
+    width: 50%;
+}
+
+#player-else {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+img {
+    width: 50px;
+    height: 50px;
+}
+
+#navButtons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+}
 </style>

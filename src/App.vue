@@ -1,26 +1,16 @@
 <script setup>
-import AddTrack from './components/AddTrack.vue';
-import Player from './components/Player.vue';
-import Playlist from './components/Playlist.vue';
-
-
+import Home from './components/Home.vue';
 </script>
 
 <template>
-    <div id="global-container">
-        <h1>Jukebox</h1>
-        <Player />
-        <Playlist />
-        <AddTrack />
-    </div>
+    <!-- <nav>
+        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/playlists">Playlists</RouterLink>
+    </nav>
+    <RouterView /> -->
+    <Home />
 </template>
 
 <style scoped>
-    div#global-container {
-        margin: 15%;
-    }
-
-    div#global-container > * {
-        margin: 50px;
-    }
+    
 </style>
