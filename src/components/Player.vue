@@ -15,8 +15,8 @@ watchEffect(() => {
     if (audioRef && audioRef.value) {
         textButtonPlayPause.value = 'pause';
         setTimeout(() => {
-            if (currentSong.value.playable) {
-                audioRef.value.play().catch(error => {
+            if (currentSong.value && currentSong.value.playable) {
+                audioRef.value.play().catch(() => {
                     playlist.value[playlist.value.findIndex(song => song.id === currentSong.value.id)].playable = false;
                     getNextSong();
                 });

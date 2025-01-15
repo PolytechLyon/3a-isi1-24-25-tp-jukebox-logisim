@@ -30,6 +30,7 @@ function pushSongToPlayer(id) {
 function addSong(songName, songUrl) {
 	const song = { id: id.value, name: songName, url: songUrl, playable: true };
 	playlist.value.push(song);
+	localStorage.setItem('playlist', JSON.stringify(playlist.value.filter(s => s.url.startsWith('http'))));
 	id.value++;
 }
 
@@ -57,6 +58,10 @@ function getNextSong() {
 		playlist.value[(currentSongIndex + 1) % playlist.value.length];
 }
 
+function actualizePlaylist() {
+    playlist.value = JSON.parse(localStorage.getItem('playlist')) || [];
+}
+
 export function usePlaylist() {
 	return {
 		playlist,
@@ -66,5 +71,6 @@ export function usePlaylist() {
 		deleteSong,
 		getCurrentSong,
 		getNextSong,
+        actualizePlaylist,
 	};
 }

@@ -25,7 +25,7 @@ function clickURL() {
 function uploadSelected(event) {
     blobURL.value = URL.createObjectURL(event.target.files[0]);
     songName.value = event.target.value;
-    songName.value = songName.value.substring(songName.value.lastIndexOf("\/") + 1);
+    songName.value = songName.value.substring(songName.value.lastIndexOf("\\") + 1);
 }
 
 function clickUpload() {

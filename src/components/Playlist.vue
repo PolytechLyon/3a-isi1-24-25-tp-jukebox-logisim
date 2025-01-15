@@ -1,6 +1,13 @@
 <script setup>
+import { onMounted } from 'vue';
 import { usePlaylist } from '../composables/usePlaylist';
-const { playlist, pushSongToPlayer, deleteSong, currentSong } = usePlaylist();
+const { playlist, pushSongToPlayer, deleteSong, currentSong, actualizePlaylist } = usePlaylist();
+
+onMounted(() => {
+    actualizePlaylist();
+    console.log('Playlist:', playlist);
+    
+});
 </script>
 
 <template>
