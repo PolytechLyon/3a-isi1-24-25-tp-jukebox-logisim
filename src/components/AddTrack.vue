@@ -17,7 +17,7 @@ function onChange(event) {
 
 function clickURL() {
     let songNameShort = songURL.value;
-    songNameShort = songNameShort.substring(songNameShort.lastIndexOf("\\") + 1);
+    songNameShort = songNameShort.substring(songNameShort.lastIndexOf("\/") + 1);
     addSong(songNameShort, songURL.value);
     songURL.value = "";
 }
@@ -25,7 +25,7 @@ function clickURL() {
 function uploadSelected(event) {
     blobURL.value = URL.createObjectURL(event.target.files[0]);
     songName.value = event.target.value;
-    songName.value = songName.value.substring(songName.value.lastIndexOf("\\") + 1);
+    songName.value = songName.value.substring(songName.value.lastIndexOf("\/") + 1);
 }
 
 function clickUpload() {
