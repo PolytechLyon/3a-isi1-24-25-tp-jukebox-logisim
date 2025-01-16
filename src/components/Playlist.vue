@@ -20,7 +20,7 @@ onMounted(() => {
                         unplayable: !track.playable,
                         'current-track': track.id === currentSong?.id
                     }">
-                        {{ track.name }}
+                        {{ track.name.length > 20 ? `${track.name.slice(0, 20)}...` : track.name }}
                     </span>
                 </td>
                 <td>
