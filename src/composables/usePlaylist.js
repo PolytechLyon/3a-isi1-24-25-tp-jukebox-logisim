@@ -59,7 +59,7 @@ function getNextSong() {
 }
 
 function actualizePlaylist() {
-    playlist.value = JSON.parse(localStorage.getItem('playlist')) || [];
+    playlist.value = JSON.parse(localStorage.getItem('playlist')) || playlist.value;
 }
 
 export function usePlaylist() {
