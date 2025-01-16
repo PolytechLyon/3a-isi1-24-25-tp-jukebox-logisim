@@ -1,8 +1,8 @@
 # Compte Rendu TP Jukebox
 
 ## Binôme
-- Nom Prénom
-- Nom Prénom
+- PRIBYLSKI Simon
+- RENIERS Clément
 
 ## Choix de conception et de réalisation
 
