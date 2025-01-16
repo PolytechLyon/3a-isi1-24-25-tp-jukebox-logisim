@@ -58,6 +58,22 @@ function getNextSong() {
 		playlist.value[(currentSongIndex + 1) % playlist.value.length];
 }
 
+function getPreviousSong() {
+    const currentSongIndex = playlist.value.findIndex(
+        (song) => song.id === currentSong.value.id
+    );
+    console.log(
+        "Previous song : " +
+            playlist.value[
+                (currentSongIndex - 1 + playlist.value.length) % playlist.value.length
+            ].name
+    );
+    currentSong.value =
+        playlist.value[
+            (currentSongIndex - 1 + playlist.value.length) % playlist.value.length
+        ];
+}
+
 function actualizePlaylist() {
     playlist.value = JSON.parse(localStorage.getItem('playlist')) || playlist.value;
 }
@@ -71,6 +87,7 @@ export function usePlaylist() {
 		deleteSong,
 		getCurrentSong,
 		getNextSong,
+        getPreviousSong,
         actualizePlaylist,
 	};
 }

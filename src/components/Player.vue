@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watchEffect, onMounted, onBeforeUnmount } from 'vue';
 import { usePlaylist } from '../composables/usePlaylist';
-const { getNextSong, getCurrentSong, playlist } = usePlaylist();
+const { getNextSong, getPreviousSong, getCurrentSong, playlist } = usePlaylist();
 
 const audioRef = ref(null);
 const progressRef = ref(null);
@@ -100,8 +100,10 @@ onBeforeUnmount(() => {
             </div>
             <progress @click="putAudioAtCursorPosition" id="progress" ref="progressRef" value="0" max="100"></progress>
             <div id="navButtons">
-                <div @click="togglePlayPause" id="playPauseButton"><img :src="`/${textButtonPlayPause}.svg`" /></div>
-                <div @click="changeMode" id="playMode"><img :src="`/${playModes[choiceRef]}.svg`" /></div>
+                <div @click="{getPreviousSong(); audioRef.value?.play()}"><img src="/previous.svg" alt="previous" /></div>
+                <div @click="togglePlayPause" id="playPauseButton"><img :src="`/${textButtonPlayPause}.svg`" alt="Play/Pause" /></div>
+                <div @click="{getNextSong(); audioRef.value?.play()}"><img src="/next.svg" alt="next" /></div>
+                <div @click="changeMode" id="playMode"><img :src="`/${playModes[choiceRef]}.svg`" alt="next"/></div>
             </div>
         </div>
         <div v-else id="player-else">
