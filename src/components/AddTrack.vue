@@ -45,7 +45,7 @@ function clickUpload() {
         </select>
         <span v-if="uploadFile">
             <label for="file-upload">Upload file</label>
-            <input type="file" @change="uploadSelected" id="file-upload" />
+            <input type="file" @change="uploadSelected" id="file-upload" accept="audio/*"/>
             <button :disabled="!blobURL" @click="clickUpload">Add uploaded file</button>
         </span>
         <span v-else>
