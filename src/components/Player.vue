@@ -20,8 +20,6 @@ watchEffect(() => {
                     playlist.value[playlist.value.findIndex(song => song.id === currentSong.value.id)].playable = false;
                     getNextSong();
                 });
-            } else {
-                getNextSong();
             }
         }, 10);
         console.log('Current song:', currentSong.value?.name);
